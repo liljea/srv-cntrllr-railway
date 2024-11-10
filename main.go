@@ -6,6 +6,7 @@ import (
 	"log"
 	"mcs_bab_7/database"
 	"mcs_bab_7/routers"
+	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -16,13 +17,13 @@ import (
 // go get -u "github.com/rubenv/sql-migrate"
 // go get -u "github.com/joho/godotenv"
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "liatdibawahlaptop"
-	dbName   = "praktikum_mcs_bab7"
-)
+// const (
+// 	host     = "localhost"
+// 	port     = 5432
+// 	user     = "postgres"
+// 	password = ""
+// 	dbName   = "praktikum_mcs_bab7"
+// )
 
 var (
 	DB  *sql.DB
@@ -30,12 +31,15 @@ var (
 )
 
 func main() {
-	var PORT = ":49000"
+	// var PORT = ":49000"
 
-	psqlInfo := fmt.Sprintf(
-		`host=%s port=%d user=%s password=%s dbname=%s sslmode=disable`,
-		host, port, user, password, dbName,
-	)
+	// psqlInfo := fmt.Sprintf(
+	// 	`host=%s port=%d user=%s password=%s dbname=%s sslmode=disable`,
+	// 	host, port, user, password, dbName,
+	// )
+
+	psqlInfo := os.Getenv("DATABASE_URL")
+	var PORT = ":" + os.Getenv("PORT")
 
 	DB, err = sql.Open("postgres", psqlInfo)
 
@@ -49,4 +53,5 @@ func main() {
 
 	routers.StartServer().Run(PORT)
 	fmt.Println("DB Success Connected")
+	fmt.Printf("Server running on port %v", PORT)
 }
